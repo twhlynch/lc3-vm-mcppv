@@ -1,1 +1,12 @@
+# output
+/build
 lc3
+
+# macos
+.DS_Store
+
+# lsp
+/.cache
+
+# vscode
+/.vscode

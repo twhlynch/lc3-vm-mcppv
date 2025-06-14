@@ -1,9 +1,10 @@
 # LC3 Virtual Machine for mcpp
-[![made-with-cpp](https://img.shields.io/badge/Made%20with-C++_17-1f425f.svg)](https://cplusplus.com/) [![creator-justinmeiners](https://img.shields.io/badge/Creator-justinmeiners-008000.svg)](https://github.com/justinmeiners) [![adapted-by-rozukke](https://img.shields.io/badge/Adapted_by-rozukke-f497af.svg)](https://github.com/rozukke) [![GitHub license](https://img.shields.io/github/license/rozukke/lc3-vm-mcpp.svg)](https://github.com/rozukke/lc3-vm-mcpp/blob/main/LICENSE)
+[![made-with-cpp](https://img.shields.io/badge/Made%20with-C++_17-1f425f.svg)](https://cplusplus.com/) [![creator-justinmeiners](https://img.shields.io/badge/Creator-justinmeiners-008000.svg)](https://github.com/justinmeiners) [![adapted-by-rozukke](https://img.shields.io/badge/Adapted_by-rozukke-f497af.svg)](https://github.com/rozukke) [![adapted-by-twhlynch](https://img.shields.io/badge/Adapted_by-twhlynch-050505.svg)](https://github.com/twhlynch) [![GitHub license](https://img.shields.io/github/license/rozukke/lc3-vm-mcpp.svg)](https://github.com/rozukke/lc3-vm-mcpp/blob/main/LICENSE)
 
-This is a C++ based virtual machine for the LC3 assembly language, adapted to work with [mcpp](https://github.com/rozukke/mcpp) the Royal Melbourne Institute of Technology (RMIT) to supplement the COSC2084 (Programming Studio 2) course. The original project by [Justin Meiners](https://github.com/justinmeiners) can be found [here](https://github.com/justinmeiners/lc3-vm). Thank you to [Michael Dann](https://github.com/mchldann/) for the original adaptation and trap implementations.
+This is a C++ based virtual machine for the LC3 assembly language, adapted to work with [mcpp](https://github.com/rozukke/mcpp) the Royal Melbourne Institute of Technology (RMIT) to supplement the COSC2084 (Programming Studio 2) course, and again adapted by [twhlynch](https://github.com/twhlynch) adding a 3D visualiser for mcpp. The original project by [Justin Meiners](https://github.com/justinmeiners) can be found [here](https://github.com/justinmeiners/lc3-vm). Thank you to [Michael Dann](https://github.com/mchldann/) for the original adaptation and trap implementations.
 
 ## Additions
+### mcpp
 This VM supports a few additional TRAPs based on mcpp functionality, including:
 - `CHAT` to post to Minecraft chat
 - `GETP` to get player position
@@ -17,11 +18,23 @@ As well as:
     - `-x` hexadecimal
     - `-b` binary
 
+### Visualiser
+Setting the `-V` flag will simulate mcpp TRAPS without needing Minecraft, and visualise the final result in 3D.
+Controls: 
+- `WASD`: move
+- `E & Q`: up & down
+- `Shift & C`: sprint
+
 ## Usage
 `lc3 [-FLAG] <file.obj>` where `file.obj` is a [compiled](https://github.com/rozukke/laser-mcpp) binary. `-FLAG` is a single letter flag based on the above Additions section.
 
 ## Installation
-Designed to install on UNIX-based systems. Run `make` in the root directory and then `sudo make install` to make the command globally available.
+Designed to install on UNIX-based systems.
+- Install `make`, `cmake`, `glfw3`, `glm`, and `mcpp`
+- Run `git lfs pull`
+- Run `mkdir build && cd build`
+- Run `cmake ..` and `cmake --build .`
+- Run `sudo cmake --install .` to make the `lc3` command globally available.
 
 ## TRAP formats
 
@@ -37,3 +50,4 @@ Designed to install on UNIX-based systems. Run `make` in the root directory and 
 
 ## Examples
 Two `.asm` examples are provided, printing a "Hello World" message in the console and in Minecraft. Run the `.obj` files to test the code out. 
+An additional `.asm` and `.obj` exist to generate a grid of all block ids for testing the visualiser.

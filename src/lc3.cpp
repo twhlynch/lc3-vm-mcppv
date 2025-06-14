@@ -10,9 +10,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 /* for MCPI */
+#include "mcppv/Simulation.hpp"
 #include <mcpp/mcpp.h>
 
 mcpp::MinecraftConnection* mc;
+mcppv::Simulation* sim;
 
 // Converts a byte into string of binary digits
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
@@ -25,7 +27,8 @@ enum {
     FLAG_SIG = 'd', // signed
     FLAG_HEX = 'x', // hex
     FLAG_BIN = 'b', // binary
-    FLAG_SUP = 's'  // suppress run info
+    FLAG_SUP = 's', // suppress run info
+    FLAG_SIM = 'V', // simulate and visualise
 };
 enum {
     R_R0 = 0,
@@ -342,8 +345,14 @@ template <unsigned op> void ins(uint16_t instr) {
             printf("----\n");
         } else {
             /* Minecraft TRAPs */
-            if (mc == NULL) {
-                mc = new mcpp::MinecraftConnection();
+            if (flag_set(FLAG_SIM)) {
+                if (sim == NULL) {
+                    sim = new mcppv::Simulation();
+                }
+            } else {
+                if (mc == NULL) {
+                    mc = new mcpp::MinecraftConnection();
+                }
             }
 
             if (trapvect == TRAP_CHAT) {
@@ -355,26 +364,59 @@ template <unsigned op> void ins(uint16_t instr) {
                     chat_str += (char)*c;
                     ++c;
                 }
-                mc->postToChat(chat_str);
+
+                if (flag_set(FLAG_SIM)) {
+                    sim->postToChat(chat_str);
+                } else {
+                    mc->postToChat(chat_str);
+                }
             } else if (trapvect == TRAP_GETP) {
-                mcpp::Coordinate pos = mc->getPlayerPosition();
+                mcpp::Coordinate pos;
+
+                if (flag_set(FLAG_SIM)) {
+                    pos = sim->getPlayerPosition();
+                } else {
+                    pos = mc->getPlayerPosition();
+                }
+
                 reg[0] = pos.x;
                 reg[1] = pos.y;
                 reg[2] = pos.z;
             } else if (trapvect == TRAP_SETP) {
                 mcpp::Coordinate pos(unsigned_to_signed(reg[0]), unsigned_to_signed(reg[1]),
                                      unsigned_to_signed(reg[2]));
-                mc->setPlayerPosition(pos);
+
+                if (flag_set(FLAG_SIM)) {
+                    sim->setPlayerPosition(pos);
+                } else {
+                    mc->setPlayerPosition(pos);
+                }
             } else if (trapvect == TRAP_GETB) {
                 mcpp::Coordinate pos(unsigned_to_signed(reg[0]), unsigned_to_signed(reg[1]),
                                      unsigned_to_signed(reg[2]));
-                reg[3] = mc->getBlock(pos).id;
+
+                if (flag_set(FLAG_SIM)) {
+                    reg[3] = sim->getBlock(pos).id;
+                } else {
+                    reg[3] = mc->getBlock(pos).id;
+                }
             } else if (trapvect == TRAP_SETB) {
                 mcpp::Coordinate pos(unsigned_to_signed(reg[0]), unsigned_to_signed(reg[1]),
                                      unsigned_to_signed(reg[2]));
-                mc->setBlock(pos, reg[3]);
+
+                if (flag_set(FLAG_SIM)) {
+                    sim->setBlock(pos, reg[3]);
+                } else {
+                    mc->setBlock(pos, reg[3]);
+                }
             } else if (trapvect == TRAP_GETH) {
-                reg[1] = (*mc).getHeight(unsigned_to_signed(reg[0]), unsigned_to_signed(reg[2]));
+                if (flag_set(FLAG_SIM)) {
+                    reg[1] =
+                        (*sim).getHeight(unsigned_to_signed(reg[0]), unsigned_to_signed(reg[2]));
+                } else {
+                    reg[1] =
+                        (*mc).getHeight(unsigned_to_signed(reg[0]), unsigned_to_signed(reg[2]));
+                }
             }
 
             api_calls++;
@@ -401,7 +443,8 @@ int main(int argc, const char* argv[]) {
     if (strcmp(argv[1], "-h") == 0) {
         // Help text
         printf("Usage: lc3 [-FLAG] <file.obj>\nRun an LC3 .obj file.\n\n");
-        printf("  -h\taccess this help page\n\n");
+        printf("  -h\taccess this help page\n");
+        printf("  -V\tsimulate mcpp and visualise\n\n");
         printf("Customise REG (print registers) functionality to represent "
                "registers:\n\n");
         printf("  -u\tas unsigned integers (default)\n");
@@ -411,7 +454,7 @@ int main(int argc, const char* argv[]) {
     }
     if (strcmp(argv[1], "-v") == 0) {
         // Version info
-        printf("lc3-vm-mcpp version 'main'\n");
+        printf("lc3-vm-mcpp version 'mcppv'\n");
         exit(0);
     }
     if (argc == 3) {
@@ -456,5 +499,9 @@ int main(int argc, const char* argv[]) {
 
     if (mc != NULL) {
         delete mc;
+    }
+    if (sim != NULL) {
+        sim->render();
+        delete sim;
     }
 }
