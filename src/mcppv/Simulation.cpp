@@ -1,6 +1,7 @@
 #include "Simulation.hpp"
 #include <cmath>
 #include <iostream>
+#include <string>
 #include <limits.h>
 
 #include "Renderer/Clock.hpp"
@@ -20,7 +21,7 @@
 
 namespace mcppv {
 
-Simulation::Simulation() : _playerPosition(0) {
+Simulation::Simulation() : _playerPosition(0, 0, 0) {
     // starting platform
     for (int x = -20; x < 20; x++) {
         for (int z = -20; z < 20; z++) {
@@ -36,7 +37,7 @@ Simulation::Simulation() : _playerPosition(0) {
     // }
 }
 
-void Simulation::postToChat(const std::__1::string& message) {
+void Simulation::postToChat(const std::string& message) {
     std::cout << "CHAT: " << message << std::endl;
 }
 

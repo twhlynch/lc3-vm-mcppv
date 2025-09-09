@@ -3,6 +3,7 @@
 
 #include <mcpp/mcpp.h>
 #include <vector>
+#include <string>
 
 namespace mcppv {
 
@@ -20,7 +21,7 @@ class Simulation {
   public:
     Simulation();
 
-    void postToChat(const std::__1::string& message);
+    void postToChat(const std::string& message);
 
     mcpp::Coordinate getPlayerPosition();
     void setPlayerPosition(const mcpp::Coordinate& pos);
