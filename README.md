@@ -1,3 +1,18 @@
+> [!WARNING]
+> THIS SUCKS
+> 
+> I kinda just crammed my graphics engine into this
+> 
+> the code sucks
+> 
+> the implementation is weird
+> 
+> everything is scuffed
+> 
+> you get it
+> 
+
+
 # LC3 Virtual Machine for mcpp
 [![made-with-cpp](https://img.shields.io/badge/Made%20with-C++_17-1f425f.svg)](https://cplusplus.com/) [![creator-justinmeiners](https://img.shields.io/badge/Creator-justinmeiners-008000.svg)](https://github.com/justinmeiners) [![adapted-by-rozukke](https://img.shields.io/badge/Adapted_by-rozukke-f497af.svg)](https://github.com/rozukke) [![adapted-by-twhlynch](https://img.shields.io/badge/Adapted_by-twhlynch-050505.svg)](https://github.com/twhlynch) [![GitHub license](https://img.shields.io/github/license/rozukke/lc3-vm-mcpp.svg)](https://github.com/rozukke/lc3-vm-mcpp/blob/main/LICENSE)
 
