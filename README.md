@@ -46,7 +46,7 @@ Controls:
 ## Installation
 Designed to install on UNIX-based systems.
 - Install `make`, `cmake`, `glfw3`, `glm`, and `mcpp`
-- Run `git lfs pull`
+- Run `git lfs pull` (you may need to install git-lfs and run `git lfs install` first)
 - Run `mkdir build && cd build`
 - Run `cmake ..` and `cmake --build .`
 - Run `sudo cmake --install .` to make the `lc3` command globally available.
